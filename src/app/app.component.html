@@ -1,0 +1,8 @@
+<div class="container">
+  <h1>Tree View Example</h1>
+  <app-tree-view
+    [nodes]="treeNodes"
+    [selectable]="selectable"
+    (nodeSelected)="onNodeSelected($event)"
+  ></app-tree-view>
+</div>
