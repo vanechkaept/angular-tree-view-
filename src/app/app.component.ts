@@ -9,6 +9,7 @@ import {
   RouterState,
   ActivatedRoute,
 } from '@angular/router';
+import { Subject } from 'rxjs';
 import { TreeNode } from './tree.component';
 
 @Component({
@@ -55,9 +56,20 @@ export class AppComponent {
     },
   ];
 
+  expandAllSubject = new Subject<void>();
+  collapsellSubject = new Subject<void>();
+
   selectionMode: string = 'Single';
 
   onNodeSelected(selectedNode: TreeNode) {
     console.log('Selected node:', selectedNode);
+  }
+
+  openAll(){
+    this.expandAllSubject.next();
+  }
+
+  closeAll(){
+    this.collapsellSubject.next();
   }
 }

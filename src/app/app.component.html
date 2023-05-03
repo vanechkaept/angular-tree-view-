@@ -1,8 +1,13 @@
 <div class="container">
   <h1>Tree View Example</h1>
+  <button (click)="openAll()">open all</button>
+  <button (click)="closeAll()">close all</button>
   <app-tree-view
     [nodes]="treeNodes"
     [selectable]="selectable"
+    [expandAllSubject]="expandAllSubject"
+    [collapsellSubject]="collapsellSubject"
+    [expanded]='true'
     (nodeSelected)="onNodeSelected($event)"
   ></app-tree-view>
 </div>
