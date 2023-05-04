@@ -7,13 +7,12 @@
     [selectable]="selectable"
     [expandAllSubject]="expandAllSubject"
     [collapsellSubject]="collapsellSubject"
-    [expanded]='true'
-    [content]='content'
+    [expanded]="true"
+    [content]="content"
     (nodeSelected)="onNodeSelected($event)"
   ></app-tree-view>
 </div>
 
 <ng-template #content let-data>
-  <!-- ---------: {{data | json}} -->
-    {{data.label}}
+  {{ data.label }}
 </ng-template>

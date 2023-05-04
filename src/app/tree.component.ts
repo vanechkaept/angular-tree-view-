@@ -52,7 +52,8 @@ export class TreeViewComponent<T> implements OnInit {
   @Input() content!: TemplateRef<unknown>;
   // @Output() nodeSelected = new EventEmitter<TreeNode>();
 
-  expandedNodes: Array<MultidimensionalArray<T> | Multidimensional<T>> = [];
+  private expandedNodes: Array<MultidimensionalArray<T> | Multidimensional<T>> =
+    [];
 
   ngOnInit() {
     this.expandAllSubject.subscribe((_) => this.expandAll());
@@ -66,10 +67,11 @@ export class TreeViewComponent<T> implements OnInit {
     return Array.isArray(node);
   }
 
-  toggleNode(nodes: MultidimensionalArray<T>) {
-    if (!this.isArray(nodes)) {
-      return;
-    }
+  toggleNode(nodes: Multidimensional<T>) {
+    console.log(nodes);
+    // if (!this.isArray(nodes)) {
+    //   return;
+    // }
     const expandedIndex = this.expandedNodes.indexOf(nodes);
     if (this.nodeExpanded(nodes)) {
       this.expandedNodes.splice(expandedIndex, 1);
@@ -78,7 +80,7 @@ export class TreeViewComponent<T> implements OnInit {
     }
   }
 
-  nodeExpanded(node: MultidimensionalArray<T>): boolean {
+  nodeExpanded(node: Multidimensional<T>): boolean {
     return this.expandedNodes.indexOf(node) !== -1;
   }
 
@@ -97,12 +99,12 @@ export class TreeViewComponent<T> implements OnInit {
   }
 
   private expandRecursive(nodes: MultidimensionalArray<T>) {
-    // for (const node of nodes) {
-    //   this.expandedNodes.push(node);
-    //   if (node.children) {
-    //     this.expandRecursive(node.children);
-    //   }
-    // }
+    for (const node of nodes) {
+      this.expandedNodes.push(node);
+      if (node.children) {
+        this.expandRecursive(node.children);
+      }
+    }
   }
 
   asArray(type: MultidimensionalArray<T>): Array<T> {
