@@ -1,4 +1,4 @@
-import { OnInit } from '@angular/core';
+import { OnInit, TemplateRef } from '@angular/core';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Subject } from 'rxjs';
 
@@ -8,10 +8,13 @@ export enum SelectionMode {
   Multiple,
 }
 
-export interface TreeNode {
-  label: string;
-  children?: TreeNode[];
-}
+// export interface TreeNode {
+//   label: string;
+//   children?: TreeNode[];
+// }
+
+export type Multidimensional<T> = T & { children?: T[] };
+export type MultidimensionalArray<T> = Array<Multidimensional<T>>;
 
 @Component({
   selector: 'app-tree-view',
@@ -39,16 +42,17 @@ export interface TreeNode {
     `,
   ],
 })
-export class TreeViewComponent implements OnInit {
-  @Input() nodes: TreeNode[];
+export class TreeViewComponent<T> implements OnInit {
+  @Input() nodes: MultidimensionalArray<T> = [];
   @Input() selectable = false;
   @Input() rootNode = true;
   @Input() expandAllSubject = new Subject();
   @Input() collapsellSubject = new Subject();
   @Input() expanded = false;
-  @Output() nodeSelected = new EventEmitter<TreeNode>();
+  @Input() content!: TemplateRef<unknown>;
+  // @Output() nodeSelected = new EventEmitter<TreeNode>();
 
-  expandedNodes: TreeNode[] = [];
+  expandedNodes: Array<MultidimensionalArray<T> | Multidimensional<T>> = [];
 
   ngOnInit() {
     this.expandAllSubject.subscribe((_) => this.expandAll());
@@ -58,23 +62,28 @@ export class TreeViewComponent implements OnInit {
     }
   }
 
-  toggleNode(node: TreeNode) {
-    if (!node.children?.length) {
+  isArray(node: MultidimensionalArray<T> | undefined): boolean {
+    return Array.isArray(node);
+  }
+
+  toggleNode(nodes: MultidimensionalArray<T>) {
+    if (!this.isArray(nodes)) {
       return;
     }
-    if (this.nodeExpanded(node)) {
-      this.expandedNodes.splice(this.expandedNodes.indexOf(node), 1);
+    const expandedIndex = this.expandedNodes.indexOf(nodes);
+    if (this.nodeExpanded(nodes)) {
+      this.expandedNodes.splice(expandedIndex, 1);
     } else {
-      this.expandedNodes.push(node);
+      this.expandedNodes.push(nodes);
     }
   }
 
-  nodeExpanded(node: TreeNode): boolean {
+  nodeExpanded(node: MultidimensionalArray<T>): boolean {
     return this.expandedNodes.indexOf(node) !== -1;
   }
 
-  onNodeSelected(node: TreeNode) {
-    this.nodeSelected.emit(node);
+  onNodeSelected(node: MultidimensionalArray<T>) {
+    // this.nodeSelected.emit(node);
   }
 
   expandAll() {
@@ -87,24 +96,28 @@ export class TreeViewComponent implements OnInit {
     this.collapseRecursive(this.nodes);
   }
 
-  private expandRecursive(nodes: TreeNode[]) {
-    for (const node of nodes) {
-      this.expandedNodes.push(node);
-      if (node.children) {
-        this.expandRecursive(node.children);
-      }
-    }
+  private expandRecursive(nodes: MultidimensionalArray<T>) {
+    // for (const node of nodes) {
+    //   this.expandedNodes.push(node);
+    //   if (node.children) {
+    //     this.expandRecursive(node.children);
+    //   }
+    // }
   }
 
-  private collapseRecursive(nodes: TreeNode[]) {
-    for (const node of nodes) {
-      const index = this.expandedNodes.indexOf(node);
-      if (index !== -1) {
-        this.expandedNodes.splice(index, 1);
-      }
-      if (node.children) {
-        this.collapseRecursive(node.children);
-      }
-    }
+  asArray(type: MultidimensionalArray<T>): Array<T> {
+    return type as Array<T>;
+  }
+
+  private collapseRecursive(nodes: MultidimensionalArray<T>) {
+    // for (const node of nodes) {
+    //   const index = this.expandedNodes.indexOf(node);
+    //   if (index !== -1) {
+    //     this.expandedNodes.splice(index, 1);
+    //   }
+    //   if (node?.children) {
+    //     this.collapseRecursive(node.children);
+    //   }
+    // }
   }
 }

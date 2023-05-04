@@ -4,15 +4,16 @@
       <span *ngIf="node.children?.length">{{
         nodeExpanded(node) ? '-' : '+'
       }}</span>
-      {{ node.label }}
+      <ng-container *ngTemplateOutlet="content; context: { $implicit: node }"></ng-container>
     </span>
-    <div class="div" [class.hide]="!nodeExpanded(node)">
+    <div class="div">
       <app-tree-view
         [nodes]="node.children"
         [selectable]="selectable"
         (nodeSelected)="onNodeSelected($event)"
         [expanded]="expanded"
         [rootNode]="false"
+        [content]='content'
         [expandAllSubject]="expandAllSubject"
         [collapsellSubject]="collapsellSubject"
       ></app-tree-view>
