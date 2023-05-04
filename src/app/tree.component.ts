@@ -64,9 +64,9 @@ export class TreeViewComponent<T, K> implements OnInit {
     }
   }
 
-  isArray(node: MultidimensionalArray<T> | undefined): boolean {
-    return Array.isArray(node);
-  }
+  // isArray(node: MultidimensionalArray<T> | undefined): boolean {
+  //   return Array.isArray(node);
+  // }
 
   toggleNode(nodes: Multidimensional<T>) {
     console.log(nodes);
@@ -93,40 +93,23 @@ export class TreeViewComponent<T, K> implements OnInit {
   }
 
   expandAll() {
-    this.expandRecursive(this.nodes);
-  }
-
-  collapseAll() {
-    this.collapseRecursive(this.nodes);
-  }
-
-  private expandRecursive(nodes: MultidimensionalArray<T>) {
-    for (const node of nodes) {
+    for (const node of this.nodes) {
       if (!this.nodeExpanded(node)) {
         this.expandedNodes.push(node);
       }
     }
   }
 
-  asArray(type: MultidimensionalArray<T>): Array<T> {
-    return type as Array<T>;
-  }
-
-  private collapseRecursive(nodes: MultidimensionalArray<T>) {
-    for (const node of nodes) {
+  collapseAll() {
+    for (const node of this.nodes) {
       const index = this.expandedNodes.indexOf(node);
       if (index !== -1) {
         this.expandedNodes.splice(index, 1);
       }
     }
-    // for (const node of nodes) {
-    //   const index = this.expandedNodes.indexOf(node);
-    //   if (index !== -1) {
-    //     this.expandedNodes.splice(index, 1);
-    //   }
-    //   if (node?.children) {
-    //     this.collapseRecursive(node.children);
-    //   }
-    // }
   }
+
+  // asArray(type: MultidimensionalArray<T>): Array<T> {
+  //   return type as Array<T>;
+  // }
 }
