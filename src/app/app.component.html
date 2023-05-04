@@ -8,11 +8,12 @@
     [expandAllSubject]="expandAllSubject"
     [collapsellSubject]="collapsellSubject"
     [expanded]="true"
+    [childKey]="'child'"
     [content]="content"
     (nodeSelected)="onNodeSelected($event)"
   ></app-tree-view>
 </div>
 
 <ng-template #content let-data>
-  {{ data.label }}
+  {{ data.label}} 
 </ng-template>

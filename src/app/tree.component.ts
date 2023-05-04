@@ -13,7 +13,7 @@ export enum SelectionMode {
 //   children?: TreeNode[];
 // }
 
-export type Multidimensional<T> = T & { children?: T[] };
+export type Multidimensional<T> = T & { [key: string]: T[] };
 export type MultidimensionalArray<T> = Array<Multidimensional<T>>;
 
 @Component({
@@ -42,10 +42,11 @@ export type MultidimensionalArray<T> = Array<Multidimensional<T>>;
     `,
   ],
 })
-export class TreeViewComponent<T> implements OnInit {
+export class TreeViewComponent<T, K> implements OnInit {
   @Input() nodes: MultidimensionalArray<T> = [];
   @Input() selectable = false;
   @Input() rootNode = true;
+  @Input() childKey: string;
   @Input() expandAllSubject = new Subject();
   @Input() collapsellSubject = new Subject();
   @Input() expanded = false;
@@ -69,9 +70,12 @@ export class TreeViewComponent<T> implements OnInit {
 
   toggleNode(nodes: Multidimensional<T>) {
     console.log(nodes);
+    console.log(this.expandedNodes);
+    console.log('------------');
     // if (!this.isArray(nodes)) {
     //   return;
     // }
+
     const expandedIndex = this.expandedNodes.indexOf(nodes);
     if (this.nodeExpanded(nodes)) {
       this.expandedNodes.splice(expandedIndex, 1);
@@ -89,20 +93,17 @@ export class TreeViewComponent<T> implements OnInit {
   }
 
   expandAll() {
-    this.expandedNodes = [];
     this.expandRecursive(this.nodes);
   }
 
   collapseAll() {
-    this.expandedNodes = [];
     this.collapseRecursive(this.nodes);
   }
 
   private expandRecursive(nodes: MultidimensionalArray<T>) {
     for (const node of nodes) {
-      this.expandedNodes.push(node);
-      if (node.children) {
-        this.expandRecursive(node.children);
+      if (!this.nodeExpanded(node)) {
+        this.expandedNodes.push(node);
       }
     }
   }
@@ -112,6 +113,12 @@ export class TreeViewComponent<T> implements OnInit {
   }
 
   private collapseRecursive(nodes: MultidimensionalArray<T>) {
+    for (const node of nodes) {
+      const index = this.expandedNodes.indexOf(node);
+      if (index !== -1) {
+        this.expandedNodes.splice(index, 1);
+      }
+    }
     // for (const node of nodes) {
     //   const index = this.expandedNodes.indexOf(node);
     //   if (index !== -1) {

@@ -1,7 +1,7 @@
 <ul [class.lined]="!rootNode">
   <li *ngFor="let node of nodes">
     <span (click)="toggleNode(node)">
-      <span *ngIf="node.children?.length">{{
+      <span *ngIf="node[childKey]?.length">{{
         nodeExpanded(node) ? '-' : '+'
       }}</span>
       <ng-container
@@ -10,11 +10,12 @@
     </span>
     <div class="div" [class.hide]="!nodeExpanded(node)">
       <app-tree-view
-        [nodes]="node.children"
+        [nodes]="node[childKey]"
         [selectable]="selectable"
         (nodeSelected)="onNodeSelected($event)"
         [expanded]="expanded"
         [rootNode]="false"
+        [childKey]="childKey"
         [content]="content"
         [expandAllSubject]="expandAllSubject"
         [collapsellSubject]="collapsellSubject"

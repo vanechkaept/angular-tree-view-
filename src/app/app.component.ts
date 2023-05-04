@@ -10,7 +10,6 @@ import {
   ActivatedRoute,
 } from '@angular/router';
 import { Subject } from 'rxjs';
-import { TreeNode } from './tree.component';
 
 @Component({
   selector: 'my-app',
@@ -18,24 +17,24 @@ import { TreeNode } from './tree.component';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  treeNodes: TreeNode[] = [
+  treeNodes = [
     {
       label: 'Node 1',
-      children: [
+      child: [
         {
           label: 'Node 1.1',
-          children: [],
+          child: [],
         },
         {
           label: 'Node 1.2',
-          children: [
+          child: [
             {
               label: 'Node 1.2.1',
-              children: [],
+              child: [],
             },
             {
               label: 'Node 1.2.2',
-              children: [],
+              child: [],
             },
           ],
         },
@@ -43,14 +42,14 @@ export class AppComponent {
     },
     {
       label: 'Node 2',
-      children: [
+      child: [
         {
           label: 'Node 2.1',
-          children: [],
+          child: [],
         },
         {
           label: 'Node 2.2',
-          children: [],
+          child: [],
         },
       ],
     },
@@ -61,15 +60,11 @@ export class AppComponent {
 
   selectionMode: string = 'Single';
 
-  onNodeSelected(selectedNode: TreeNode) {
-    console.log('Selected node:', selectedNode);
-  }
-
-  openAll(){
+  openAll() {
     this.expandAllSubject.next();
   }
 
-  closeAll(){
+  closeAll() {
     this.collapsellSubject.next();
   }
 }
